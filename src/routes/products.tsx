@@ -30,14 +30,14 @@ function ProductsPage() {
   const [quick, setQuick] = useState<any>(null);
 
   const filtered = useMemo(() => {
-    let list = PRODUCTS.filter((p) => {
+    let list = PRODUCTS.filter((p: any) => {
       if (query && !`${p.name} ${p.brand}`.toLowerCase().includes(query.toLowerCase())) return false;
       if (filters.Category?.length && !filters.Category.includes(p.category)) return false;
       if (filters.Brand?.length && !filters.Brand.includes(p.brand)) return false;
       if (filters.Gender?.length && !filters.Gender.includes(p.gender)) return false;
       if (filters["Frame Shape"]?.length && !filters["Frame Shape"].includes(p.frameShape)) return false;
       if (filters["Frame Material"]?.length && !filters["Frame Material"].includes(p.frameMaterial)) return false;
-      if (filters.Color?.length && !p.colors.some((c) => filters.Color.includes(c))) return false;
+      if (filters.Color?.length && !p.colors.some((c: string) => filters.Color.includes(c))) return false;
       if (filters.Rating?.length && !filters.Rating.some((r: number) => p.rating >= r)) return false;
       if (filters.inStockOnly && !p.inStock) return false;
       if (filters.price && (p.price < filters.price[0] || p.price > filters.price[1])) return false;
