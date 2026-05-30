@@ -46,10 +46,10 @@ export function Footer() {
         <div>
           <h4 className="font-display font-bold text-lg mb-4">Contact Us</h4>
           <ul className="space-y-3 text-sm text-white/80">
-            <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5 shrink-0" /> Karingar, Nadia,<br />West Bengal</li>
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> 9000000000</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /> eyeworldopticals@gmail.com</li>
-            <li className="flex items-start gap-2"><Clock className="h-4 w-4 mt-0.5" /> Open Everyday<br />10:00 AM – 8:30 PM</li>
+            <li className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-0.5 shrink-0" /><span>Karingar, Nadia,<br />West Bengal</span></li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /><span>9000000000</span></li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /><span>eyeworldopticals@gmail.com</span></li>
+            <li className="flex items-start gap-2"><Clock className="h-4 w-4 mt-0.5" /><span>Open Everyday<br />10:00 AM – 8:30 PM</span></li>
           </ul>
         </div>
       </div>

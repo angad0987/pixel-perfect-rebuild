@@ -1,7 +1,16 @@
 import { Eye, Search, User, ShoppingCart, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 
-const nav = ["Home", "About Us", "Services", "Shop", "Brands", "Blog", "Contact"];
+const nav = [
+  { label: "Home", to: "/" },
+  { label: "About Us", to: "/" },
+  { label: "Services", to: "/" },
+  { label: "Shop", to: "/products" },
+  { label: "Brands", to: "/" },
+  { label: "Blog", to: "/" },
+  { label: "Contact", to: "/" },
+];
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -20,10 +29,10 @@ export function Header() {
 
         <nav className="hidden lg:flex items-center gap-8">
           {nav.map((n, i) => (
-            <a key={n} href="#" className={`text-sm font-medium relative py-1 transition-colors ${i === 0 ? "text-brand-accent" : "text-foreground hover:text-brand-accent"}`}>
-              {n}
+            <Link key={n.label} to={n.to} className={`text-sm font-medium relative py-1 transition-colors ${i === 0 ? "text-brand-accent" : "text-foreground hover:text-brand-accent"}`}>
+              {n.label}
               {i === 0 && <span className="absolute left-0 right-0 -bottom-1 h-0.5 bg-brand-accent rounded" />}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -42,7 +51,7 @@ export function Header() {
       {open && (
         <nav className="lg:hidden border-t border-border bg-white px-4 py-3 flex flex-col gap-3">
           {nav.map((n) => (
-            <a key={n} href="#" className="text-sm font-medium text-foreground hover:text-brand-accent transition-colors">{n}</a>
+            <Link key={n.label} to={n.to} className="text-sm font-medium text-foreground hover:text-brand-accent transition-colors" onClick={() => setOpen(false)}>{n.label}</Link>
           ))}
         </nav>
       )}
