@@ -1,6 +1,6 @@
 export const WHATSAPP_NUMBER = "919999999999";
 
-export function buildWhatsAppOrderLink(product) {
+export function buildWhatsAppOrderLink(product: any) {
   const msg = `Hello, I would like to order:%0A%0AProduct: ${product.name}%0AProduct Code: ${product.sku}%0APrice: ₹${product.price}%0A%0APlease share availability and further details.`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 }
@@ -10,7 +10,7 @@ export function buildWhatsAppChatLink() {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
-const img = (seed) => `https://images.unsplash.com/${seed}?auto=format&fit=crop&w=800&q=80`;
+const img = (seed: string) => `https://images.unsplash.com/${seed}?auto=format&fit=crop&w=800&q=80`;
 
 export const PRODUCTS = [
   {
