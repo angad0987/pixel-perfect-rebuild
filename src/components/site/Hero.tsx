@@ -13,7 +13,7 @@ export function Hero() {
           backgroundRepeat: "no-repeat",
         }}
       />
-      <div className="mx-auto max-w-7xl px-4 w-full relative z-10 py-2 lg:py-0 min-h-[auto] lg:min-h-[700px] flex items-center">
+      <div className="mx-auto max-w-7xl px-4 w-full relative z-10 pt-6 pb-8 lg:py-0 min-h-[auto] lg:min-h-[700px] flex items-center">
         <div className="max-w-xl w-full space-y-5 lg:space-y-6">
           <span className="inline-flex items-center gap-2 bg-brand text-white text-xs font-medium px-3 py-1.5 rounded-md">
             <Camera className="h-3.5 w-3.5" /> SELFIE POINT

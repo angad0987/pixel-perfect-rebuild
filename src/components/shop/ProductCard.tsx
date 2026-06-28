@@ -1,7 +1,7 @@
 import { Heart, Eye, Star } from "lucide-react";
-import { useState } from "react";
 import { WhatsAppIcon } from "./WhatsAppIcon";
 import { buildWhatsAppOrderLink } from "@/lib/products";
+import { toggleWishlist, useWishlist } from "@/lib/wishlist";
 
 export function ProductCard({
   product,
@@ -10,7 +10,8 @@ export function ProductCard({
   product: any;
   onQuickView: (p: any) => void;
 }) {
-  const [wish, setWish] = useState(false);
+  const wishlist = useWishlist();
+  const wish = wishlist.includes(product.id);
   const off = Math.round(((product.mrp - product.price) / product.mrp) * 100);
   return (
     <div className="group relative bg-white rounded-2xl border border-border/70 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
@@ -33,7 +34,7 @@ export function ProductCard({
         )}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all">
           <button
-            onClick={() => setWish(!wish)}
+            onClick={() => toggleWishlist(product.id)}
             aria-label="Wishlist"
             className="h-9 w-9 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-brand-accent hover:text-white transition-colors"
           >
