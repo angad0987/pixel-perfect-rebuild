@@ -34,7 +34,7 @@ export function ProductCard({
         )}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all">
           <button
-            onClick={() => setWish(!wish)}
+            onClick={() => toggleWishlist(product.id)}
             aria-label="Wishlist"
             className="h-9 w-9 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-brand-accent hover:text-white transition-colors"
           >
