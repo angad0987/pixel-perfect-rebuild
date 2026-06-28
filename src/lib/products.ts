@@ -1,4 +1,4 @@
-export const WHATSAPP_NUMBER = "919999999999";
+export const WHATSAPP_NUMBER = "918847381404";
 
 export function buildWhatsAppOrderLink(product: any) {
   const msg = `Hello, I would like to order:%0A%0AProduct: ${product.name}%0AProduct Code: ${product.sku}%0APrice: ₹${product.price}%0A%0APlease share availability and further details.`;

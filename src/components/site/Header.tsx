@@ -1,10 +1,10 @@
 import { Eye, Search, User, ShoppingCart, Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 
 const nav = [
   { label: "Home", to: "/" },
-  { label: "About Us", to: "/" },
+  { label: "About Us", to: "/about" },
   { label: "Services", to: "/" },
   { label: "Shop", to: "/products" },
   { label: "Brands", to: "/" },
@@ -14,6 +14,7 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-border/60 shadow-sm">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-4">
@@ -28,12 +29,15 @@ export function Header() {
         </a>
 
         <nav className="hidden lg:flex items-center gap-8">
-          {nav.map((n, i) => (
-            <Link key={n.label} to={n.to} className={`text-sm font-medium relative py-1 transition-colors ${i === 0 ? "text-brand-accent" : "text-foreground hover:text-brand-accent"}`}>
-              {n.label}
-              {i === 0 && <span className="absolute left-0 right-0 -bottom-1 h-0.5 bg-brand-accent rounded" />}
-            </Link>
-          ))}
+          {nav.map((n) => {
+            const isActive = pathname === n.to;
+            return (
+              <Link key={n.label} to={n.to} className={`text-sm font-medium relative py-1 transition-colors ${isActive ? "text-brand-accent" : "text-foreground hover:text-brand-accent"}`}>
+                {n.label}
+                {isActive && <span className="absolute left-0 right-0 -bottom-1 h-0.5 bg-brand-accent rounded" />}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -50,9 +54,12 @@ export function Header() {
       </div>
       {open && (
         <nav className="lg:hidden border-t border-border bg-white px-4 py-3 flex flex-col gap-3">
-          {nav.map((n) => (
-            <Link key={n.label} to={n.to} className="text-sm font-medium text-foreground hover:text-brand-accent transition-colors" onClick={() => setOpen(false)}>{n.label}</Link>
-          ))}
+          {nav.map((n) => {
+            const isActive = pathname === n.to;
+            return (
+              <Link key={n.label} to={n.to} className={`text-sm font-medium transition-colors ${isActive ? "text-brand-accent" : "text-foreground hover:text-brand-accent"}`} onClick={() => setOpen(false)}>{n.label}</Link>
+            );
+          })}
         </nav>
       )}
     </header>

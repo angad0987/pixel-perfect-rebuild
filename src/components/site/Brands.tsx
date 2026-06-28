@@ -1,6 +1,25 @@
 import { ArrowRight } from "lucide-react";
+import tommyLogo from "@/assets/brands/tommy-hilfiger.png";
+import scottLogo from "@/assets/brands/scott.png";
+import opiumLogo from "@/assets/brands/opium.png";
+import hashtagLogo from "@/assets/brands/hashtag.png";
+import tagHillLogo from "@/assets/brands/tag-hill.png";
+import henryCarterLogo from "@/assets/brands/henry-carter.png";
+import sorrentoLogo from "@/assets/brands/sorrento.png";
+import danielParkerLogo from "@/assets/brands/daniel-parker.png";
+import rosvinBugLogo from "@/assets/brands/rosvin-bug.png";
 
-const brands = ["Ray-Ban", "OAKLEY", "vogue", "TITAN", "fastrack", "Crizal"];
+const brands = [
+  { name: "Tommy Hilfiger", logo: tommyLogo },
+  { name: "Scott", logo: scottLogo },
+  { name: "Opium", logo: opiumLogo },
+  { name: "Hashtag", logo: hashtagLogo },
+  { name: "Tag Hill", logo: tagHillLogo },
+  { name: "Henry Carter", logo: henryCarterLogo },
+  { name: "Sorrento", logo: sorrentoLogo },
+  { name: "Daniel Parker", logo: danielParkerLogo },
+  { name: "Rosvin Bug", logo: rosvinBugLogo },
+];
 
 function Divider() {
   return (
@@ -20,10 +39,13 @@ export function Brands() {
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-brand">Our Top Brands</h2>
           <Divider />
         </div>
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center mb-10">
+        <div className="grid grid-cols-3 md:grid-cols-9 gap-4 items-center mb-10">
           {brands.map((b) => (
-            <div key={b} className="text-center font-display font-bold text-2xl text-foreground/80 hover:text-brand-accent transition-colors cursor-pointer">
-              {b}
+            <div key={b.name} className="flex flex-col items-center gap-2 group cursor-pointer">
+              <div className="h-16 w-full flex items-center justify-center bg-gray-50 rounded-lg p-2 group-hover:shadow-md transition-shadow">
+                <img src={b.logo} alt={b.name} className="max-h-full max-w-full object-contain" />
+              </div>
+              <span className="text-[10px] font-medium text-muted-foreground text-center leading-tight group-hover:text-brand-accent transition-colors">{b.name}</span>
             </div>
           ))}
         </div>
