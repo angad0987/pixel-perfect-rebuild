@@ -1,8 +1,8 @@
 import { Eye, Search, User, Heart, Menu, X, LogOut, Package, Calendar } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "@tanstack/react-router";
-import { useAuth, logout } from "@/lib/auth";
-import { useWishlist } from "@/lib/wishlist";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { logoutThunk } from "@/store/slices/authSlice";
 
 const nav = [
   { label: "Home", to: "/" },
@@ -17,8 +17,10 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState(false);
   const { pathname } = useLocation();
-  const user = useAuth();
-  const wishlist = useWishlist();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const user = useAppSelector((s) => s.auth.user);
+  const wishlist = useAppSelector((s) => s.wishlist.ids);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export function Header() {
                   <Link to="/account" onClick={() => setMenu(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-section-muted"><Package className="h-4 w-4" /> My Orders</Link>
                   <Link to="/wishlist" onClick={() => setMenu(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-section-muted"><Heart className="h-4 w-4" /> Wishlist</Link>
                   <Link to="/booking" onClick={() => setMenu(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-section-muted"><Calendar className="h-4 w-4" /> Book Eye Test</Link>
-                  <button onClick={() => { logout(); setMenu(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-section-muted border-t border-border">
+                  <button onClick={() => { dispatch(logoutThunk()); navigate({ to: "/" }); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-section-muted border-t border-border">
                     <LogOut className="h-4 w-4" /> Logout
                   </button>
                 </div>

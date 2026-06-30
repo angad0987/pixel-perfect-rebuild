@@ -1,11 +1,11 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { Check, Package, Truck, Home as HomeIcon, ClipboardCheck, ShoppingBag, ArrowLeft } from "lucide-react";
-import { getOrder, ORDER_STEPS, type OrderStatus } from "@/lib/orders";
+import { Check, Package, Truck, Home as HomeIcon, ClipboardCheck, ShoppingBag, ArrowLeft, Loader } from "lucide-react";
+import { ORDER_STEPS, type OrderStatus } from "@/lib/orders";
+import { useAppSelector } from "@/store/hooks";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { WhatsAppIcon } from "@/components/shop/WhatsAppIcon";
 import { buildWhatsAppChatLink } from "@/lib/products";
-import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/order/$orderId")({
   head: ({ params }) => ({ meta: [{ title: `Order ${params.orderId} — Eye World Opticals` }] }),
@@ -18,8 +18,21 @@ const ICONS: Record<OrderStatus, any> = {
 
 function OrderPage() {
   const { orderId } = useParams({ from: "/order/$orderId" });
-  const [order, setOrder] = useState<ReturnType<typeof getOrder>>(null);
-  useEffect(() => { setOrder(getOrder(orderId)); }, [orderId]);
+  const items = useAppSelector((s) => s.orders.items);
+  const loading = useAppSelector((s) => s.orders.loading);
+  const order = items.find((o) => o.id === orderId);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-section-muted flex flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center px-4">
+          <Loader className="h-8 w-8 animate-spin text-brand-accent" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!order) {
     return (

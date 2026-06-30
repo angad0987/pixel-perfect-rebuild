@@ -1,10 +1,11 @@
 import { X, Star, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { WhatsAppIcon } from "./WhatsAppIcon";
-import { buildWhatsAppOrderLink } from "@/lib/products";
+import { ConfirmOrderModal } from "./ConfirmOrderModal";
 
 export function ProductModal({ product, onClose }: { product: any; onClose: () => void }) {
   const [active, setActive] = useState(0);
+  const [showConfirm, setShowConfirm] = useState(false);
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
@@ -92,15 +93,21 @@ export function ProductModal({ product, onClose }: { product: any; onClose: () =
               <button aria-label="Wishlist" className="h-12 w-12 shrink-0 rounded-xl border border-border flex items-center justify-center hover:border-brand-accent hover:text-brand-accent transition-colors">
                 <Heart className="h-5 w-5" />
               </button>
-              <a href={buildWhatsAppOrderLink(product)} target="_blank" rel="noopener noreferrer"
+              <button onClick={() => setShowConfirm(true)}
                 className="flex-1 inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98] text-base">
                 <WhatsAppIcon className="h-6 w-6" />
                 Order on WhatsApp
-              </a>
+              </button>
             </div>
           </div>
         </div>
       </div>
+      {showConfirm && (
+        <ConfirmOrderModal
+          product={product}
+          onClose={() => setShowConfirm(false)}
+        />
+      )}
     </div>
   );
 }

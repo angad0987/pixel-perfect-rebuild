@@ -1,9 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Package, Heart, Calendar, LogOut, ChevronRight, User as UserIcon } from "lucide-react";
-import { useAuth, logout } from "@/lib/auth";
-import { useOrders, seedDemoOrders, ORDER_STEPS } from "@/lib/orders";
-import { PRODUCTS } from "@/lib/products";
+import { ORDER_STEPS } from "@/lib/orders";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { logoutThunk } from "@/store/slices/authSlice";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 
@@ -13,14 +13,13 @@ export const Route = createFileRoute("/account")({
 });
 
 function AccountPage() {
-  const user = useAuth();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((s) => s.auth.user);
+  const orders = useAppSelector((s) => s.orders.items);
   const navigate = useNavigate();
-  const orders = useOrders();
 
   useEffect(() => {
-    if (user === null) return; // wait
     if (!user) navigate({ to: "/auth", search: { redirect: "/account" } });
-    else seedDemoOrders(user.phone, PRODUCTS);
   }, [user, navigate]);
 
   if (!user) return null;
@@ -44,7 +43,7 @@ function AccountPage() {
               <a className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-brand-accent/10 text-brand-accent font-medium"><Package className="h-4 w-4" /> Orders</a>
               <Link to="/wishlist" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-section-muted text-foreground"><Heart className="h-4 w-4" /> Wishlist</Link>
               <Link to="/booking" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-section-muted text-foreground"><Calendar className="h-4 w-4" /> Eye Test Bookings</Link>
-              <button onClick={() => { logout(); navigate({ to: "/" }); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-section-muted text-destructive">
+              <button onClick={() => { dispatch(logoutThunk()); navigate({ to: "/" }); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-section-muted text-destructive">
                 <LogOut className="h-4 w-4" /> Logout
               </button>
             </nav>

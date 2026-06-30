@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Heart, ShoppingBag } from "lucide-react";
-import { useWishlist, toggleWishlist } from "@/lib/wishlist";
-import { PRODUCTS, buildWhatsAppOrderLink } from "@/lib/products";
+import { PRODUCTS } from "@/lib/products";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { toggleWishlistThunk } from "@/store/slices/wishlistSlice";
+import { ConfirmOrderModal } from "@/components/shop/ConfirmOrderModal";
 import { WhatsAppIcon } from "@/components/shop/WhatsAppIcon";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -12,8 +15,10 @@ export const Route = createFileRoute("/wishlist")({
 });
 
 function WishlistPage() {
-  const ids = useWishlist();
+  const dispatch = useAppDispatch();
+  const ids = useAppSelector((s) => s.wishlist.ids);
   const items = PRODUCTS.filter((p) => ids.includes(p.id));
+  const [confirmProduct, setConfirmProduct] = useState<any | null>(null);
 
   return (
     <div className="min-h-screen bg-section-muted flex flex-col">
@@ -42,7 +47,7 @@ function WishlistPage() {
               <div key={p.id} className="bg-white rounded-2xl border border-border/60 overflow-hidden group">
                 <div className="relative aspect-square bg-section-muted">
                   <img src={p.image} alt={p.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  <button onClick={() => toggleWishlist(p.id)} aria-label="Remove from wishlist" className="absolute top-3 right-3 h-9 w-9 rounded-full bg-white shadow flex items-center justify-center">
+                  <button onClick={() => dispatch(toggleWishlistThunk(p.id))} aria-label="Remove from wishlist" className="absolute top-3 right-3 h-9 w-9 rounded-full bg-white shadow flex items-center justify-center">
                     <Heart className="h-4 w-4 fill-brand-accent text-brand-accent" />
                   </button>
                 </div>
@@ -53,9 +58,9 @@ function WishlistPage() {
                     <span className="font-bold text-brand">₹{p.price.toLocaleString()}</span>
                     <span className="text-xs text-muted-foreground line-through">₹{p.mrp.toLocaleString()}</span>
                   </div>
-                  <a href={buildWhatsAppOrderLink(p)} target="_blank" rel="noopener noreferrer" className="mt-3 w-full inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#1ebe5d] text-white text-xs font-semibold py-2 rounded-lg">
+                  <button onClick={() => setConfirmProduct(p)} className="mt-3 w-full inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#1ebe5d] text-white text-xs font-semibold py-2 rounded-lg">
                     <WhatsAppIcon className="h-4 w-4" /> Order
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}
@@ -63,6 +68,13 @@ function WishlistPage() {
         )}
       </main>
       <Footer />
+
+      {confirmProduct && (
+        <ConfirmOrderModal
+          product={confirmProduct}
+          onClose={() => setConfirmProduct(null)}
+        />
+      )}
     </div>
   );
 }

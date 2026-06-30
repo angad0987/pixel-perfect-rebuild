@@ -1,7 +1,16 @@
 export const WHATSAPP_NUMBER = "918847381404";
 
-export function buildWhatsAppOrderLink(product: any) {
-  const msg = `Hello, I would like to order:%0A%0AProduct: ${product.name}%0AProduct Code: ${product.sku}%0APrice: ₹${product.price}%0A%0APlease share availability and further details.`;
+export function buildWhatsAppOrderLink(product: any, orderId?: string) {
+  const lines = [
+    "Hello, I would like to order:",
+    "",
+    `Product: ${product.name}`,
+    `Product Code: ${product.sku}`,
+    `Price: ₹${product.price}`,
+  ];
+  if (orderId) lines.push(`Order ID: ${orderId}`);
+  lines.push("", "Please share availability and further details.");
+  const msg = encodeURIComponent(lines.join("\n"));
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 }
 

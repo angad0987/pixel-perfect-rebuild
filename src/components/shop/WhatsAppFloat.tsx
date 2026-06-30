@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { WhatsAppIcon } from "./WhatsAppIcon";
 import { buildWhatsAppChatLink } from "@/lib/products";
 

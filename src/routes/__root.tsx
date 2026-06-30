@@ -8,6 +8,11 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { Provider } from "react-redux";
+import { store } from "@/store";
+import { useAppDispatch } from "@/store/hooks";
+import { loadWishlistThunk } from "@/store/slices/wishlistSlice";
+import { loadOrdersThunk } from "@/store/slices/ordersSlice";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -113,13 +118,27 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function AppInit() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(loadWishlistThunk());
+    dispatch(loadOrdersThunk());
+  }, [dispatch]);
+
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <Provider store={store}>
+        <AppInit />
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </Provider>
     </QueryClientProvider>
   );
 }

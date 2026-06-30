@@ -1,18 +1,27 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prettier/prettier */
 import { Heart, Eye, Star } from "lucide-react";
+import { useState } from "react";
 import { WhatsAppIcon } from "./WhatsAppIcon";
-import { buildWhatsAppOrderLink } from "@/lib/products";
-import { toggleWishlist, useWishlist } from "@/lib/wishlist";
+import { ConfirmOrderModal } from "./ConfirmOrderModal";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { toggleWishlistThunk } from "@/store/slices/wishlistSlice";
 
 export function ProductCard({
   product,
   onQuickView,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   product: any;
   onQuickView: (p: any) => void;
 }) {
-  const wishlist = useWishlist();
+  const dispatch = useAppDispatch();
+  const wishlist = useAppSelector((s) => s.wishlist.ids);
   const wish = wishlist.includes(product.id);
   const off = Math.round(((product.mrp - product.price) / product.mrp) * 100);
+  const [showConfirm, setShowConfirm] = useState(false);
+
   return (
     <div className="group relative bg-white rounded-2xl border border-border/70 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
       <div className="relative aspect-square bg-gradient-to-br from-section-muted to-white overflow-hidden">
@@ -34,7 +43,7 @@ export function ProductCard({
         )}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all">
           <button
-            onClick={() => toggleWishlist(product.id)}
+            onClick={() => dispatch(toggleWishlistThunk(product.id))}
             aria-label="Wishlist"
             className="h-9 w-9 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-brand-accent hover:text-white transition-colors"
           >
@@ -73,16 +82,21 @@ export function ProductCard({
           </span>
         </div>
 
-        <a
-          href={buildWhatsAppOrderLink(product)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-3 inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.98]"
+        <button
+          onClick={() => setShowConfirm(true)}
+          className="mt-3 w-full inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.98]"
         >
           <WhatsAppIcon className="h-5 w-5" />
           Order on WhatsApp
-        </a>
+        </button>
       </div>
+
+      {showConfirm && (
+        <ConfirmOrderModal
+          product={product}
+          onClose={() => setShowConfirm(false)}
+        />
+      )}
     </div>
   );
 }

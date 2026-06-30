@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate, useSearch, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Phone, ShieldCheck, ArrowLeft } from "lucide-react";
-import { requestOtp, verifyOtp } from "@/lib/auth";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { requestOtpThunk, loginThunk } from "@/store/slices/authSlice";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 
@@ -17,30 +18,33 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { redirect } = useSearch({ from: "/auth" });
+  const authError = useAppSelector((s) => s.auth.error);
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
   const [sentOtp, setSentOtp] = useState("");
+  const [validationError, setValidationError] = useState("");
 
-  function sendCode(e: React.FormEvent) {
+  async function sendCode(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
+    setValidationError("");
     const clean = phone.replace(/\D/g, "");
-    if (clean.length < 10) return setError("Enter a valid 10-digit mobile number");
-    const code = requestOtp(clean);
-    setSentOtp(code);
-    setPhone(clean);
-    setStep("otp");
+    if (clean.length < 10) return setValidationError("Enter a valid 10-digit mobile number");
+    const code = await dispatch(requestOtpThunk(clean));
+    if (code) {
+      setSentOtp(code as string);
+      setPhone(clean);
+      setStep("otp");
+    }
   }
-  function verify(e: React.FormEvent) {
+
+  async function verify(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
-    const u = verifyOtp(phone, otp);
-    if (!u) return setError("Invalid OTP. Try 123456 for the demo.");
-    navigate({ to: redirect as any });
+    const ok = await dispatch(loginThunk(phone, otp));
+    if (ok) navigate({ to: redirect as any });
   }
 
   return (
@@ -49,7 +53,7 @@ function AuthPage() {
       <main className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-border/60 p-8">
           {step === "otp" && (
-            <button onClick={() => { setStep("phone"); setError(""); }} className="text-sm text-muted-foreground inline-flex items-center gap-1 mb-4 hover:text-brand-accent">
+            <button onClick={() => { setStep("phone"); setValidationError(""); }} className="text-sm text-muted-foreground inline-flex items-center gap-1 mb-4 hover:text-brand-accent">
               <ArrowLeft className="h-4 w-4" /> Back
             </button>
           )}
@@ -74,7 +78,7 @@ function AuthPage() {
                   <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" maxLength={10} placeholder="10-digit mobile" className="flex-1 px-3 py-3 text-sm outline-none" />
                 </div>
               </label>
-              {error && <p className="text-xs text-destructive">{error}</p>}
+              {validationError && <p className="text-xs text-destructive">{validationError}</p>}
               <button className="w-full bg-brand-accent hover:bg-brand text-white font-semibold py-3 rounded-lg transition-colors">Send OTP</button>
               <p className="text-[11px] text-center text-muted-foreground">By continuing you agree to our Terms & Privacy</p>
             </form>
@@ -85,7 +89,7 @@ function AuthPage() {
                 <input value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} maxLength={6} inputMode="numeric" placeholder="••••••" className="mt-1 w-full text-center tracking-[0.6em] text-2xl font-bold border border-border rounded-lg px-3 py-3 outline-none focus:ring-2 focus:ring-brand-accent" />
               </label>
               {sentOtp && <p className="text-[11px] text-center text-muted-foreground">Demo OTP: <span className="font-mono font-semibold text-brand-accent">{sentOtp}</span></p>}
-              {error && <p className="text-xs text-destructive">{error}</p>}
+              {authError && <p className="text-xs text-destructive">{authError}</p>}
               <button className="w-full bg-brand-accent hover:bg-brand text-white font-semibold py-3 rounded-lg transition-colors">Verify & Continue</button>
             </form>
           )}
