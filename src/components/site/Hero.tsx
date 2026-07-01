@@ -1,4 +1,4 @@
-import { Calendar, Eye, ShieldCheck, BadgeDollarSign, Camera } from "lucide-react";
+import { Calendar, Eye, ShieldCheck, BadgeDollarSign } from "lucide-react";
 import heroImg from "@/assets/newherimage.png";
 
 export function Hero() {
@@ -9,15 +9,13 @@ export function Hero() {
         style={{
           backgroundImage: `url(${heroImg})`,
           backgroundSize: "contain",
-          backgroundPosition: "right center",
+          backgroundPosition: "right top",
           backgroundRepeat: "no-repeat",
         }}
       />
-      <div className="mx-auto max-w-7xl px-4 w-full relative z-10 pt-6 pb-8 lg:py-0 min-h-[auto] lg:min-h-[700px] flex items-center">
+      <div className="mx-auto max-w-7xl px-4 w-full relative z-10 pt-3 lg:pt-8 min-h-[auto] lg:min-h-[700px] flex items-start">
         <div className="max-w-xl w-full space-y-5 lg:space-y-6">
-          <span className="inline-flex items-center gap-2 bg-brand text-white text-xs font-medium px-3 py-1.5 rounded-md">
-            <Camera className="h-3.5 w-3.5" /> SELFIE POINT
-          </span>
+
           <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.1] lg:leading-[1.05] text-brand">
             See Better.<br />Look Better.<br />
             <span className="text-brand-accent">Live Better.</span>
