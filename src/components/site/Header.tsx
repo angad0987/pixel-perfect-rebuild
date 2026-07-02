@@ -84,7 +84,7 @@ export function Header() {
               )}
             </div>
           ) : (
-            <Link to="/auth" className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-brand-accent">
+            <Link to="/login" search={{ redirect: "/account" }} className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-brand-accent">
               <User className="h-5 w-5" /> <span className="hidden sm:inline">Sign in</span>
             </Link>
           )}

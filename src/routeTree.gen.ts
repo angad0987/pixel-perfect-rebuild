@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookingRouteImport } from './routes/booking'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -24,9 +26,19 @@ const WishlistRoute = WishlistRouteImport.update({
   path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsRoute = ProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -72,7 +84,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/products': typeof ProductsRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/order/$orderId': typeof OrderOrderIdRoute
 }
@@ -83,7 +97,9 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/products': typeof ProductsRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/order/$orderId': typeof OrderOrderIdRoute
 }
@@ -95,7 +111,9 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/products': typeof ProductsRoute
+  '/signup': typeof SignupRoute
   '/wishlist': typeof WishlistRoute
   '/order/$orderId': typeof OrderOrderIdRoute
 }
@@ -108,7 +126,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/booking'
     | '/contact'
+    | '/login'
     | '/products'
+    | '/signup'
     | '/wishlist'
     | '/order/$orderId'
   fileRoutesByTo: FileRoutesByTo
@@ -119,7 +139,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/booking'
     | '/contact'
+    | '/login'
     | '/products'
+    | '/signup'
     | '/wishlist'
     | '/order/$orderId'
   id:
@@ -130,7 +152,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/booking'
     | '/contact'
+    | '/login'
     | '/products'
+    | '/signup'
     | '/wishlist'
     | '/order/$orderId'
   fileRoutesById: FileRoutesById
@@ -142,7 +166,9 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BookingRoute: typeof BookingRoute
   ContactRoute: typeof ContactRoute
+  LoginRoute: typeof LoginRoute
   ProductsRoute: typeof ProductsRoute
+  SignupRoute: typeof SignupRoute
   WishlistRoute: typeof WishlistRoute
   OrderOrderIdRoute: typeof OrderOrderIdRoute
 }
@@ -156,11 +182,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products': {
       id: '/products'
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -222,7 +262,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BookingRoute: BookingRoute,
   ContactRoute: ContactRoute,
+  LoginRoute: LoginRoute,
   ProductsRoute: ProductsRoute,
+  SignupRoute: SignupRoute,
   WishlistRoute: WishlistRoute,
   OrderOrderIdRoute: OrderOrderIdRoute,
 }

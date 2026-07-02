@@ -1,13 +1,104 @@
-// Mock client-side phone OTP auth using localStorage.
-// Replace with Lovable Cloud Supabase phone auth when backend is enabled.
+import { useEffect, useState } from "react";
 
+export type User = { id: string; phone: string; name?: string; createdAt: string };
+
+interface StoredUser extends User {
+  password: string;
+}
+
+const USERS_KEY = "ew_users";
 const USER_KEY = "ew_user";
 const OTP_KEY = "ew_otp";
+const ACCESS_TOKEN_KEY = "ew_access_token";
+const REFRESH_TOKEN_KEY = "ew_refresh_token";
+const ACCESS_TOKEN_EXP_KEY = "ew_access_token_exp";
+const REFRESH_TOKEN_EXP_KEY = "ew_refresh_token_exp";
 
-export type User = { phone: string; name?: string; createdAt: string };
+function generateId(): string {
+  return (
+    (typeof crypto !== "undefined" && crypto.randomUUID?.()) ||
+    Math.random().toString(36).substring(2) + Date.now().toString(36)
+  );
+}
+
+function getRawUsers(): StoredUser[] {
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveRawUsers(users: StoredUser[]): void {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+export function findUserByPhone(phone: string): StoredUser | undefined {
+  return getRawUsers().find((u) => u.phone === phone);
+}
+
+export function createUser(phone: string, name: string, password: string): User {
+  const user: User = {
+    id: generateId(),
+    phone,
+    name,
+    createdAt: new Date().toISOString(),
+  };
+  const stored: StoredUser = { ...user, password };
+  const users = getRawUsers();
+  users.push(stored);
+  saveRawUsers(users);
+  return user;
+}
+
+const ACCESS_EXP_MS = 24 * 60 * 60 * 1000;
+const REFRESH_EXP_MS = 7 * 24 * 60 * 60 * 1000;
+
+function generateToken(): string {
+  return generateId() + generateId();
+}
+
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExp: number;
+  refreshTokenExp: number;
+}
+
+export function createTokenPair(): TokenPair {
+  return {
+    accessToken: generateToken(),
+    refreshToken: generateToken(),
+    accessTokenExp: Date.now() + ACCESS_EXP_MS,
+    refreshTokenExp: Date.now() + REFRESH_EXP_MS,
+  };
+}
+
+export function storeTokens(tokens: TokenPair): void {
+  localStorage.setItem(ACCESS_TOKEN_KEY, tokens.accessToken);
+  localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
+  localStorage.setItem(ACCESS_TOKEN_EXP_KEY, String(tokens.accessTokenExp));
+  localStorage.setItem(REFRESH_TOKEN_EXP_KEY, String(tokens.refreshTokenExp));
+}
+
+export function getStoredAccessToken(): string | null {
+  return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+export function getStoredRefreshToken(): string | null {
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
+}
+
+export function isAccessTokenValid(): boolean {
+  const exp = localStorage.getItem(ACCESS_TOKEN_EXP_KEY);
+  return !!exp && Date.now() < Number(exp);
+}
+
+export function storeUser(user: User): void {
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+}
 
 export function getUser(): User | null {
-  if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
@@ -16,48 +107,32 @@ export function getUser(): User | null {
   }
 }
 
-export function isLoggedIn() {
-  return !!getUser();
-}
-
-export function requestOtp(phone: string): string {
-  // Generate fixed-for-demo OTP, store in localStorage
-  const otp = "123456";
+export function storeOtp(phone: string, otp: string): void {
   localStorage.setItem(OTP_KEY, JSON.stringify({ phone, otp, ts: Date.now() }));
-  return otp;
 }
 
-export function verifyOtp(phone: string, code: string): User | null {
+export function getStoredOtp(): { phone: string; otp: string; ts: number } | null {
   try {
     const raw = localStorage.getItem(OTP_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    if (data.phone !== phone || data.otp !== code) return null;
-    const user: User = { phone, createdAt: new Date().toISOString() };
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
-    localStorage.removeItem(OTP_KEY);
-    window.dispatchEvent(new Event("ew-auth"));
-    return user;
+    return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 }
 
-export function updateUser(patch: Partial<User>) {
-  const u = getUser();
-  if (!u) return;
-  const next = { ...u, ...patch };
-  localStorage.setItem(USER_KEY, JSON.stringify(next));
-  window.dispatchEvent(new Event("ew-auth"));
+export function removeOtp(): void {
+  localStorage.removeItem(OTP_KEY);
 }
 
-export function logout() {
+export function logout(): void {
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+  localStorage.removeItem(ACCESS_TOKEN_EXP_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_EXP_KEY);
   localStorage.removeItem(USER_KEY);
   window.dispatchEvent(new Event("ew-auth"));
 }
 
-// React hook
-import { useEffect, useState } from "react";
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   useEffect(() => {

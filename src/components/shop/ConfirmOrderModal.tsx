@@ -72,7 +72,7 @@ export function ConfirmOrderModal({
                 You need to sign in to place an order.
               </p>
               <a
-                href="/auth?redirect=/products"
+                href="/login?redirect=/products"
                 className="inline-flex items-center justify-center bg-brand-accent text-white font-semibold px-6 py-2.5 rounded-xl"
               >
                 Sign in

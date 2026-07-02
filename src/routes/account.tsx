@@ -19,7 +19,7 @@ function AccountPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) navigate({ to: "/auth", search: { redirect: "/account" } });
+    if (!user) navigate({ to: "/login", search: { redirect: "/account" } });
   }, [user, navigate]);
 
   if (!user) return null;

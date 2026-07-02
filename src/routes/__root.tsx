@@ -13,6 +13,7 @@ import { store } from "@/store";
 import { useAppDispatch } from "@/store/hooks";
 import { loadWishlistThunk } from "@/store/slices/wishlistSlice";
 import { loadOrdersThunk } from "@/store/slices/ordersSlice";
+import { AuthInitializer } from "@/components/auth/AuthInitializer";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -136,8 +137,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <AppInit />
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
+        <AuthInitializer>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </AuthInitializer>
       </Provider>
     </QueryClientProvider>
   );
