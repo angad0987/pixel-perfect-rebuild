@@ -9,6 +9,7 @@ import {
   removeOtp,
   getStoredRefreshToken,
   getUser,
+  updateStoredUser,
   logout as clearAuth,
 } from "./auth";
 import type { User } from "./auth";
@@ -118,6 +119,21 @@ export async function login(data: { phone: string; password: string }): Promise<
   window.dispatchEvent(new Event("ew-auth"));
 
   return { user, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
+}
+
+/** PUT /api/users/profile */
+export async function updateProfile(data: { name: string }): Promise<User> {
+  await wait(400);
+
+  const user = getUser();
+  if (!user) {
+    throw new ApiError(401, "Not authenticated");
+  }
+
+  updateStoredUser({ name: data.name });
+  const updated = { ...user, name: data.name };
+  storeUser(updated);
+  return updated;
 }
 
 /** POST /api/auth/refresh-token */

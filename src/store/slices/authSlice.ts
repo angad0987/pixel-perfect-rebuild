@@ -266,6 +266,22 @@ export const refreshTokenThunk = () => async (dispatch: any) => {
   }
 };
 
+export const updateProfileThunk = (data: { name: string }) => async (dispatch: any) => {
+  dispatch(setLoading());
+  try {
+    const updatedUser = await api.updateProfile(data);
+    dispatch(setUser(updatedUser));
+    return true;
+  } catch (err: any) {
+    if (err instanceof api.ApiError) {
+      dispatch(setError(err.message));
+    } else {
+      dispatch(setError("Failed to update profile. Please try again."));
+    }
+    return false;
+  }
+};
+
 export const logoutThunk = () => (dispatch: any, getState: any) => {
   const user = getState().auth.user;
   if (user) {
@@ -274,7 +290,6 @@ export const logoutThunk = () => (dispatch: any, getState: any) => {
   }
   clearAuth();
   dispatch(logout());
-  dispatch(clearWishlist());
   dispatch(clearOrders());
 };
 

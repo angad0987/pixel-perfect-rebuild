@@ -1,5 +1,6 @@
-export type OrderStatus = "Placed" | "Confirmed" | "Packed" | "Shipped" | "Delivered";
-export const ORDER_STEPS: OrderStatus[] = ["Placed", "Confirmed", "Packed", "Shipped", "Delivered"];
+export type OrderStatus = "Processing" | "Shipped" | "Delivered" | "Cancelled";
+
+export const ORDER_STEPS: OrderStatus[] = ["Processing", "Shipped", "Delivered"];
 
 export type Order = {
   id: string;
@@ -9,6 +10,7 @@ export type Order = {
   brand: string;
   sku: string;
   price: number;
+  quantity: number;
   status: OrderStatus;
   placedAt: string;
   timeline: { status: OrderStatus; at: string }[];

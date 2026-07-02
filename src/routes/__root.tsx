@@ -15,6 +15,7 @@ import { loadWishlistThunk } from "@/store/slices/wishlistSlice";
 import { loadOrdersThunk } from "@/store/slices/ordersSlice";
 import { AuthInitializer } from "@/components/auth/AuthInitializer";
 
+import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -140,6 +141,7 @@ function RootComponent() {
         <AuthInitializer>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
+          <Toaster />
         </AuthInitializer>
       </Provider>
     </QueryClientProvider>

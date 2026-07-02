@@ -68,10 +68,11 @@ export const createOrderThunk = (
   const now = new Date().toISOString();
   const order: Order = {
     ...input,
+    quantity: input.quantity ?? 1,
     id,
-    status: "Placed" as OrderStatus,
+    status: "Processing" as OrderStatus,
     placedAt: now,
-    timeline: [{ status: "Placed" as OrderStatus, at: now }],
+    timeline: [{ status: "Processing" as OrderStatus, at: now }],
     customer: { phone: user.phone },
   };
   const key = `ew_orders_${user.phone}`;

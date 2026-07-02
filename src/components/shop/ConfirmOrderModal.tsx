@@ -8,13 +8,7 @@ import { createOrderThunk } from "@/store/slices/ordersSlice";
 import { buildWhatsAppOrderLink } from "@/lib/products";
 import { WhatsAppIcon } from "./WhatsAppIcon";
 
-export function ConfirmOrderModal({
-  product,
-  onClose,
-}: {
-  product: any;
-  onClose: () => void;
-}) {
+export function ConfirmOrderModal({ product, onClose }: { product: any; onClose: () => void }) {
   const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.auth.user);
   const [loading, setLoading] = useState(false);
@@ -33,7 +27,8 @@ export function ConfirmOrderModal({
         brand: product.brand,
         sku: product.sku,
         price: product.price,
-      })
+        quantity: product.quantity ?? 1,
+      }),
     );
     if (order) {
       setLoading(false);
@@ -107,9 +102,7 @@ export function ConfirmOrderModal({
                   <div className="text-xs uppercase text-brand-accent font-semibold">
                     {product.brand}
                   </div>
-                  <div className="font-semibold text-brand text-sm truncate">
-                    {product.name}
-                  </div>
+                  <div className="font-semibold text-brand text-sm truncate">{product.name}</div>
                   <div className="text-sm text-muted-foreground">{product.sku}</div>
                   <div className="font-bold text-brand mt-0.5">
                     ₹{product.price.toLocaleString()}
@@ -141,6 +134,6 @@ export function ConfirmOrderModal({
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

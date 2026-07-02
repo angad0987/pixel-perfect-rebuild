@@ -94,6 +94,17 @@ export function isAccessTokenValid(): boolean {
   return !!exp && Date.now() < Number(exp);
 }
 
+export function updateStoredUser(partial: Partial<User>): void {
+  const users = getRawUsers();
+  const current = getUser();
+  if (!current) return;
+  const idx = users.findIndex((u) => u.id === current.id);
+  if (idx !== -1) {
+    users[idx] = { ...users[idx], ...partial };
+    saveRawUsers(users);
+  }
+}
+
 export function storeUser(user: User): void {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
