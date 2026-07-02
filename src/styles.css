@@ -69,11 +69,11 @@
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.20 0.06 250);
+  --foreground: oklch(0.2 0.06 250);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.06 250);
+  --card-foreground: oklch(0.2 0.06 250);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.06 250);
+  --popover-foreground: oklch(0.2 0.06 250);
   --primary: oklch(0.27 0.08 255);
   --primary-foreground: oklch(0.99 0.005 250);
   --brand: oklch(0.27 0.08 255);
@@ -149,4 +149,38 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-slide-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+@keyframes vt-slide-to-left {
+  to {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+}
+
+::view-transition-old(root) {
+  animation: 200ms ease-out both vt-slide-to-left;
+}
+
+::view-transition-new(root) {
+  animation: 250ms ease-out both vt-slide-from-right;
 }
